@@ -1,26 +1,36 @@
-name: Continuous Integration
+name: Deploy to GitHub Pages
 
 on:
-  pull_request:
   push:
     branches:
       - main
+  workflow_dispatch:
 
-env:
-  GITHUB_TOKEN: ${{ github.token }}
+permissions:
+  contents: read
+  pages: write
+  id-token: write
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  group: pages
   cancel-in-progress: true
 
 jobs:
-  build_and_deploy_cdn_starter:
-    name: Build and Deploy Static website to Wasmer Edge
+  deploy:
+    name: Build and deploy static site
     runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
-      - name: Install Wasmer
-        uses: wasmerio/setup-wasmer@v2
-      - name: Deploy app to Wasmer Edge
-        run: wasmer deploy --token=${{ secrets.WASMER_CIUSER_PROD_TOKEN }} --publish-package --non-interactive --no-wait --no-persist-id
+        uses: actions/checkout@v4
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: public
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

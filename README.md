@@ -1,28 +1,17 @@
-A static-website starter template using [Static Web Server](https://github.com/static-web-server/static-web-server).
-
-> You can follow the full tutorial from [here](https://docs.wasmer.io/edge/tutorials/cdn)
+A static personal homepage, served with [GitHub Pages](https://pages.github.com/).
 
 ## Usage
 
-All the static files will be served from the `public` folder, and the static webserver will be configured using the `config.toml` file.
+All static files live in the `public` folder — that's what gets published.
 
-You can run the static-website template easily using Wasmer (check out the [install guide](https://docs.wasmer.io/install)):
-
-```bash
-wasmer run . --net
-```
-
-Open [http://localhost:8080](http://localhost:8080) with your browser
-to see the static website.
-
-## Deploy on Wasmer Edge
-
-The easiest way to serve your public assets is to use the [Wasmer Edge](https://wasmer.io/products/edge) as your CDN.
-
-Live example: https://static-website.wasmer.app/
-
-Run this commmand to deploy to Wasmer Edge:
+To preview locally, just open `public/index.html` in a browser, or serve it with any static file server, for example:
 
 ```bash
-wasmer deploy
+npx serve public
 ```
+
+## Deploy
+
+Pushes to `main` automatically build and deploy the `public` folder to GitHub Pages via the workflow in `.github/workflows/ci.yaml`.
+
+To enable Pages for this repo (one-time setup): go to **Settings → Pages**, and under "Build and deployment" set the source to **GitHub Actions**.
