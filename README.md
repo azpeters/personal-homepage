@@ -47,16 +47,21 @@ have one or more photos. To add a new place:
      "lat": 37.7694,
      "lng": -122.4862,
      "images": [
-       { "src": "images/spirits/04-golden-gate-park.jpg", "alt": "Describe what's actually in the photo" },
+       { "src": "images/spirits/04-golden-gate-park.jpg", "alt": "Describe what's actually in the photo", "primary": true },
        { "src": "images/spirits/04-golden-gate-park-2.jpg", "alt": "Describe the second photo" }
      ],
      "caption": "A sentence or two about this place and what Kamiya wrote about it."
    }
    ```
-   `images` can hold as many photos as you want for that place. Get
-   `lat`/`lng` from your photo's location data (if your camera/phone
-   recorded it) or by right-clicking the spot in Google Maps and copying
-   the coordinates.
+   `images` can hold as many photos as you want for that place, and always
+   displays with correct aspect ratios (never stretched or cropped) in a
+   gallery that reflows as the window resizes. Add `"primary": true` to
+   whichever image should always show first (and as the map popup's
+   thumbnail) regardless of where it falls in the list. Clicking any photo
+   opens it full size; click the X, click outside it, or press Escape to
+   close. Get `lat`/`lng` from your photo's location data (if your
+   camera/phone recorded it) or by right-clicking the spot in Google Maps
+   and copying the coordinates.
 5. Commit the new image(s) and the updated JSON file together.
 
 The three sample places (Ferry Building, Coit Tower, Lombard Street) use

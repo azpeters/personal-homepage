@@ -66,6 +66,7 @@
         .place-gallery {
             display: flex;
             flex-wrap: wrap;
+            align-items: flex-start;
             gap: 10px;
             margin-top: 10px;
         }
@@ -76,6 +77,44 @@
             height: auto;
             border-radius: 2px;
             flex: 1 1 280px;
+            cursor: zoom-in;
+        }
+
+        .lightbox-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.87);
+            z-index: 10000;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            cursor: zoom-out;
+        }
+
+        .lightbox-overlay.is-open {
+            display: flex;
+        }
+
+        .lightbox-overlay img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            box-shadow: 0 6px 40px rgba(0, 0, 0, 0.6);
+            cursor: default;
+        }
+
+        .lightbox-close {
+            position: fixed;
+            top: 14px;
+            right: 20px;
+            color: #fff;
+            font-size: 34px;
+            line-height: 1;
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 8px 12px;
         }
 
         .place-entry figcaption {
@@ -135,12 +174,27 @@
         </section>
     </div>
 
+    <div class="lightbox-overlay" id="lightbox">
+        <button class="lightbox-close" id="lightbox-close" aria-label="Close photo">&times;</button>
+        <img id="lightbox-img" src="" alt="">
+    </div>
+
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
         integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     <script>
         async function initTour() {
             const res = await fetch('data/spirits-places.json');
             const places = (await res.json()).sort((a, b) => a.order - b.order);
+
+            // A place's images can mark one as "primary" (images: [{ src, alt,
+            // primary: true }]) to force it first, regardless of listed order.
+            // Everything else keeps its original order after it.
+            function orderedImages(p) {
+                const imgs = p.images;
+                const i = imgs.findIndex((img) => img.primary);
+                if (i <= 0) return imgs;
+                return [imgs[i], ...imgs.slice(0, i), ...imgs.slice(i + 1)];
+            }
 
             // --- Structured data for search engines / AI crawlers (static in the page source) ---
             const jsonLd = {
@@ -159,7 +213,7 @@
                         "@type": "Place",
                         "name": p.title,
                         "description": p.caption,
-                        "image": p.images.map(img => new URL(img.src, window.location.href).href),
+                        "image": orderedImages(p).map(img => new URL(img.src, window.location.href).href),
                         "geo": {
                             "@type": "GeoCoordinates",
                             "latitude": p.lat,
@@ -179,7 +233,7 @@
                 const fig = document.createElement('figure');
                 fig.className = 'place-entry';
                 fig.id = `place-${p.id}`;
-                const gallery = p.images.map(img =>
+                const gallery = orderedImages(p).map(img =>
                     `<img src="${img.src}" alt="${img.alt}" loading="lazy">`
                 ).join('');
                 fig.innerHTML = `
@@ -189,6 +243,34 @@
                     <figcaption>${p.caption}</figcaption>
                 `;
                 listEl.appendChild(fig);
+            });
+
+            // --- Click a gallery photo to view it full size ---
+            const lightbox = document.getElementById('lightbox');
+            const lightboxImg = document.getElementById('lightbox-img');
+
+            function openLightbox(src, alt) {
+                lightboxImg.src = src;
+                lightboxImg.alt = alt;
+                lightbox.classList.add('is-open');
+            }
+
+            function closeLightbox() {
+                lightbox.classList.remove('is-open');
+                lightboxImg.src = '';
+            }
+
+            listEl.addEventListener('click', (e) => {
+                if (e.target.matches('.place-gallery img')) {
+                    openLightbox(e.target.src, e.target.alt);
+                }
+            });
+            document.getElementById('lightbox-close').addEventListener('click', closeLightbox);
+            lightbox.addEventListener('click', (e) => {
+                if (e.target === lightbox) closeLightbox();
+            });
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') closeLightbox();
             });
 
             // --- Leaflet map ---
@@ -231,7 +313,7 @@
             const latLngs = places.map(p => [p.lat, p.lng]);
             places.forEach((p) => {
                 const marker = L.marker([p.lat, p.lng]).addTo(map);
-                const firstImage = p.images[0];
+                const firstImage = orderedImages(p)[0];
                 const moreNote = p.images.length > 1
                     ? `<div class="popup-more">+${p.images.length - 1} more photo${p.images.length > 2 ? 's' : ''} below</div>`
                     : '';
