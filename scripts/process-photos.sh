@@ -45,7 +45,7 @@ fi
 for f in "${files[@]}"; do
   name="$(basename "$f")"
   echo "Processing $name..."
-  "$IM" "$f" -resize "$MAX_SIZE" \
+  "$IM" "$f" -auto-orient -resize "$MAX_SIZE" \
     "$WATERMARK" -gravity southeast -geometry "$MARGIN" -composite \
     "$OUTPUT_DIR/$name"
 done
