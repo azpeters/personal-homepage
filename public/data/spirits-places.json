@@ -1,39 +1,59 @@
 [
   {
-    "id": "ferry-building",
+    "id": "joice-st",
     "order": 1,
-    "title": "Ferry Building",
-    "chapter": "SAMPLE — note which chapter/section of the book this place is from",
-    "lat": 37.7955,
-    "lng": -122.3937,
+    "title": "Joice St",
+    "chapter": "Chapter 1 - Joice Street. This was a delightful climb and descent walk. The scenery truly does rapidly change along it. Check out the book (see above) for more details.",
+    "lat": 37.793061,
+    "lng": -122.408527,
     "images": [
-      { "src": "images/spirits/01-ferry-building.jpg", "alt": "Sample placeholder photo for the Ferry Building" },
-      { "src": "images/spirits/01-ferry-building-2.jpg", "alt": "Second sample placeholder photo for the Ferry Building" }
+      {
+        "src": "images/spirits/ch1-joicest-1.jpeg",
+        "alt": "Sample placeholder photo for the Ferry Building"
+      },
+      {
+        "src": "images/spirits/ch1-joicest-2.jpeg",
+        "alt": "Second sample placeholder photo for the Ferry Building"
+      },
+      {
+        "src": "images/spirits/ch1-joicest-3.jpeg",
+        "alt": "Second sample placeholder photo for the Ferry Building"
+      },
+      {
+        "src": "images/spirits/ch1-joicest-4.jpeg",
+        "alt": "Second sample placeholder photo for the Ferry Building"
+      }
     ],
-    "caption": "SAMPLE PLACE — replace with your own photo(s) and notes. A place can have as many photos as you like."
+    "caption": "Some photos I took on this journey. The first one mimics the perspective of the drawing in the book."
   },
   {
     "id": "coit-tower",
     "order": 2,
     "title": "Coit Tower",
-    "chapter": "SAMPLE — note which chapter/section of the book this place is from",
+    "chapter": "SAMPLE \u2014 note which chapter/section of the book this place is from",
     "lat": 37.8024,
     "lng": -122.4058,
     "images": [
-      { "src": "images/spirits/02-coit-tower.jpg", "alt": "Sample placeholder photo for Coit Tower" }
+      {
+        "src": "images/spirits/02-coit-tower.jpg",
+        "alt": "Sample placeholder photo for Coit Tower"
+      }
     ],
-    "caption": "SAMPLE PLACE — replace with your own photo and notes."
+    "caption": "SAMPLE PLACE \u2014 replace with your own photo and notes."
   },
   {
     "id": "lombard-street",
     "order": 3,
     "title": "Lombard Street",
-    "chapter": "SAMPLE — note which chapter/section of the book this place is from",
+    "chapter": "SAMPLE \u2014 note which chapter/section of the book this place is from",
     "lat": 37.8021,
     "lng": -122.4187,
     "images": [
-      { "src": "images/spirits/03-lombard-street.jpg", "alt": "Sample placeholder photo for Lombard Street" }
+      {
+        "src": "images/spirits/03-lombard-street.jpg",
+        "alt": "Sample placeholder photo for Lombard Street"
+      }
     ],
-    "caption": "SAMPLE PLACE — replace with your own photo and notes."
+    "caption": "SAMPLE PLACE \u2014 replace with your own photo and notes."
   }
 ]

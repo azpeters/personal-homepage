@@ -82,6 +82,23 @@
             color: #555;
             margin-top: 8px;
         }
+
+        .place-entry.is-hidden {
+            display: none;
+        }
+
+        #filter-notice {
+            display: none;
+            margin: 16px 0;
+        }
+
+        #filter-notice.is-active {
+            display: block;
+        }
+
+        #filter-notice a {
+            cursor: pointer;
+        }
     </style>
 </head>
 
@@ -110,6 +127,8 @@
         </div>
 
         <div id="map"></div>
+
+        <p id="filter-notice"><a id="show-all-link">&larr; Showing just this place. Click here to show all places.</a></p>
 
         <section id="tour-stops" aria-label="Places from the book">
             <!-- Populated from data/spirits-places.json below. -->
@@ -159,6 +178,7 @@
             places.forEach((p) => {
                 const fig = document.createElement('figure');
                 fig.className = 'place-entry';
+                fig.id = `place-${p.id}`;
                 const gallery = p.images.map(img =>
                     `<img src="${img.src}" alt="${img.alt}" loading="lazy">`
                 ).join('');
@@ -187,6 +207,31 @@
                 maxZoom: 19
             }).addTo(map);
 
+            // --- Clicking a marker filters the list below to just that place ---
+            const filterNotice = document.getElementById('filter-notice');
+            const showAllLink = document.getElementById('show-all-link');
+
+            function showOnly(placeId) {
+                document.querySelectorAll('.place-entry').forEach((el) => {
+                    el.classList.toggle('is-hidden', el.id !== `place-${placeId}`);
+                });
+                filterNotice.classList.add('is-active');
+                const target = document.getElementById(`place-${placeId}`);
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            }
+
+            function showAll() {
+                document.querySelectorAll('.place-entry').forEach((el) => el.classList.remove('is-hidden'));
+                filterNotice.classList.remove('is-active');
+            }
+
+            showAllLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                showAll();
+            });
+
             const latLngs = places.map(p => [p.lat, p.lng]);
             places.forEach((p) => {
                 const marker = L.marker([p.lat, p.lng]).addTo(map);
@@ -202,7 +247,11 @@
                         <p>${p.caption}</p>
                     </div>
                 `);
+                marker.on('click', () => showOnly(p.id));
             });
+
+            // Clicking empty map area (not a marker) clears the filter
+            map.on('click', () => showAll());
 
             map.fitBounds(L.latLngBounds(latLngs), { padding: [30, 30] });
         }
