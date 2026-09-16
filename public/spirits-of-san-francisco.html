@@ -2,11 +2,11 @@
 <html lang="en">
 
 <head>
-    <title>A Walking Tour of San Francisco | Alisa Peters</title>
+    <title>Spirits of San Francisco: A Photo Companion | Alisa Peters</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description"
-        content="An ongoing photo walking tour of San Francisco by Alisa Peters, with each stop mapped and photographed along the way.">
+        content="A personal photo companion to Gary Kamiya's Spirits of San Francisco, matching Alisa Peters' own photos to the places the book explores, mapped as she works through it.">
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
     <link rel="icon" href="/images/favicon.ico" />
 
@@ -33,19 +33,52 @@
             margin: 0 0 4px 0;
         }
 
-        .tour-stop {
+        .tour-popup .popup-more {
+            font-size: 12px;
+            color: #777;
+        }
+
+        .book-callout {
+            background: #f7f5f0;
+            border: 1px solid #e5e0d5;
+            border-radius: 4px;
+            padding: 16px 20px;
+            margin: 20px 0 30px 0;
+        }
+
+        .book-callout p {
+            margin: 6px 0;
+        }
+
+        .place-entry {
             margin-bottom: 40px;
             padding-bottom: 30px;
             border-bottom: 1px solid #eee;
         }
 
-        .tour-stop img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 2px;
+        .place-entry .chapter-label {
+            color: #888;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
         }
 
-        .tour-stop figcaption {
+        .place-gallery {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .place-gallery img {
+            max-width: 100%;
+            width: 320px;
+            height: auto;
+            border-radius: 2px;
+            flex: 1 1 280px;
+        }
+
+        .place-entry figcaption {
             color: #555;
             margin-top: 8px;
         }
@@ -56,16 +89,30 @@
     <div class="container">
         <p><a href="/">&larr; Back home</a></p>
 
-        <h1>A Walking Tour of San Francisco</h1>
+        <h1>Spirits of San Francisco: A Photo Companion</h1>
         <p>
-            An ongoing collection of photos from walks around San Francisco, each one pinned to where it was taken.
-            Click a marker on the map to see the photo for that stop, or scroll down for the full list.
+            An ongoing project photographing the places, corners, and hidden histories from Gary Kamiya's
+            <em>Spirits of San Francisco: Voyages Through the Unknown City</em> &mdash; matching my own photos to
+            the book's stories as I make my way through it, chapter by chapter. Click a marker on the map to see
+            photos for that place, or scroll down for the full list.
         </p>
+
+        <div class="book-callout">
+            <p><strong>📖 The book:</strong> <em>Spirits of San Francisco: Voyages Through the Unknown City</em> by
+                Gary Kamiya is the companion to this page &mdash; every place here comes from something Kamiya
+                wrote about.</p>
+            <p>
+                <a href="https://bookshop.org/p/books/spirits-of-san-francisco-voyages-through-the-unknown-city-gary-kamiya/ece3599d8ff26f2d?ean=9781635579819&bkshp-astro=t"
+                    rel="noopener">Get it from Bookshop.org</a>
+                &mdash; when you check out, pick your favorite local bookshop to support before you complete the
+                purchase.
+            </p>
+        </div>
 
         <div id="map"></div>
 
-        <section id="tour-stops" aria-label="Walking tour stops">
-            <!-- Populated from data/tour-stops.json by script.js below. -->
+        <section id="tour-stops" aria-label="Places from the book">
+            <!-- Populated from data/spirits-places.json below. -->
         </section>
     </div>
 
@@ -73,26 +120,31 @@
         integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     <script>
         async function initTour() {
-            const res = await fetch('data/tour-stops.json');
-            const stops = (await res.json()).sort((a, b) => a.order - b.order);
+            const res = await fetch('data/spirits-places.json');
+            const places = (await res.json()).sort((a, b) => a.order - b.order);
 
             // --- Structured data for search engines / AI crawlers (static in the page source) ---
             const jsonLd = {
                 "@context": "https://schema.org",
                 "@type": "ItemList",
-                "name": "A Walking Tour of San Francisco",
-                "itemListElement": stops.map((s, i) => ({
+                "name": "Spirits of San Francisco: A Photo Companion",
+                "isBasedOn": {
+                    "@type": "Book",
+                    "name": "Spirits of San Francisco: Voyages Through the Unknown City",
+                    "author": { "@type": "Person", "name": "Gary Kamiya" }
+                },
+                "itemListElement": places.map((p, i) => ({
                     "@type": "ListItem",
                     "position": i + 1,
                     "item": {
-                        "@type": "TouristAttraction",
-                        "name": s.title,
-                        "description": s.caption,
-                        "image": new URL(s.image, window.location.href).href,
+                        "@type": "Place",
+                        "name": p.title,
+                        "description": p.caption,
+                        "image": p.images.map(img => new URL(img.src, window.location.href).href),
                         "geo": {
                             "@type": "GeoCoordinates",
-                            "latitude": s.lat,
-                            "longitude": s.lng
+                            "latitude": p.lat,
+                            "longitude": p.lng
                         }
                     }
                 }))
@@ -104,13 +156,17 @@
 
             // --- Static, crawlable list (also serves as the no-JS-map fallback) ---
             const listEl = document.getElementById('tour-stops');
-            stops.forEach((s) => {
+            places.forEach((p) => {
                 const fig = document.createElement('figure');
-                fig.className = 'tour-stop';
+                fig.className = 'place-entry';
+                const gallery = p.images.map(img =>
+                    `<img src="${img.src}" alt="${img.alt}" loading="lazy">`
+                ).join('');
                 fig.innerHTML = `
-                    <h2>${s.order}. ${s.title}</h2>
-                    <img src="${s.image}" alt="${s.alt}" loading="lazy">
-                    <figcaption>${s.caption}</figcaption>
+                    <div class="chapter-label">${p.chapter || ''}</div>
+                    <h2>${p.title}</h2>
+                    <div class="place-gallery">${gallery}</div>
+                    <figcaption>${p.caption}</figcaption>
                 `;
                 listEl.appendChild(fig);
             });
@@ -122,24 +178,27 @@
                 maxZoom: 19
             }).addTo(map);
 
-            const latLngs = stops.map(s => [s.lat, s.lng]);
-            const markers = stops.map((s) => {
-                const marker = L.marker([s.lat, s.lng]).addTo(map);
+            const latLngs = places.map(p => [p.lat, p.lng]);
+            places.forEach((p) => {
+                const marker = L.marker([p.lat, p.lng]).addTo(map);
+                const firstImage = p.images[0];
+                const moreNote = p.images.length > 1
+                    ? `<div class="popup-more">+${p.images.length - 1} more photo${p.images.length > 2 ? 's' : ''} below</div>`
+                    : '';
                 marker.bindPopup(`
                     <div class="tour-popup">
-                        <h4>${s.order}. ${s.title}</h4>
-                        <img src="${s.image}" alt="${s.alt}">
-                        <p>${s.caption}</p>
+                        <h4>${p.title}</h4>
+                        <img src="${firstImage.src}" alt="${firstImage.alt}">
+                        ${moreNote}
+                        <p>${p.caption}</p>
                     </div>
                 `);
-                return marker;
             });
 
-            L.polyline(latLngs, { color: '#5b7c8a', weight: 3, dashArray: '6 8' }).addTo(map);
             map.fitBounds(L.latLngBounds(latLngs), { padding: [30, 30] });
         }
 
-        initTour().catch((err) => console.error('Could not load tour stops:', err));
+        initTour().catch((err) => console.error('Could not load places:', err));
     </script>
 </body>
 
