@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>A Walking Tour of San Francisco | Alisa Peters</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description"
+        content="An ongoing photo walking tour of San Francisco by Alisa Peters, with each stop mapped and photographed along the way.">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+    <link rel="icon" href="/images/favicon.ico" />
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+
+    <style>
+        #map {
+            height: 480px;
+            width: 100%;
+            margin: 20px 0;
+            border: 1px solid #ddd;
+        }
+
+        .tour-popup img {
+            width: 220px;
+            height: auto;
+            display: block;
+            margin-bottom: 6px;
+            border-radius: 2px;
+        }
+
+        .tour-popup h4 {
+            margin: 0 0 4px 0;
+        }
+
+        .tour-stop {
+            margin-bottom: 40px;
+            padding-bottom: 30px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .tour-stop img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 2px;
+        }
+
+        .tour-stop figcaption {
+            color: #555;
+            margin-top: 8px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <p><a href="/">&larr; Back home</a></p>
+
+        <h1>A Walking Tour of San Francisco</h1>
+        <p>
+            An ongoing collection of photos from walks around San Francisco, each one pinned to where it was taken.
+            Click a marker on the map to see the photo for that stop, or scroll down for the full list.
+        </p>
+
+        <div id="map"></div>
+
+        <section id="tour-stops" aria-label="Walking tour stops">
+            <!-- Populated from data/tour-stops.json by script.js below. -->
+        </section>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <script>
+        async function initTour() {
+            const res = await fetch('data/tour-stops.json');
+            const stops = (await res.json()).sort((a, b) => a.order - b.order);
+
+            // --- Structured data for search engines / AI crawlers (static in the page source) ---
+            const jsonLd = {
+                "@context": "https://schema.org",
+                "@type": "ItemList",
+                "name": "A Walking Tour of San Francisco",
+                "itemListElement": stops.map((s, i) => ({
+                    "@type": "ListItem",
+                    "position": i + 1,
+                    "item": {
+                        "@type": "TouristAttraction",
+                        "name": s.title,
+                        "description": s.caption,
+                        "image": new URL(s.image, window.location.href).href,
+                        "geo": {
+                            "@type": "GeoCoordinates",
+                            "latitude": s.lat,
+                            "longitude": s.lng
+                        }
+                    }
+                }))
+            };
+            const ldScript = document.createElement('script');
+            ldScript.type = 'application/ld+json';
+            ldScript.textContent = JSON.stringify(jsonLd);
+            document.head.appendChild(ldScript);
+
+            // --- Static, crawlable list (also serves as the no-JS-map fallback) ---
+            const listEl = document.getElementById('tour-stops');
+            stops.forEach((s) => {
+                const fig = document.createElement('figure');
+                fig.className = 'tour-stop';
+                fig.innerHTML = `
+                    <h2>${s.order}. ${s.title}</h2>
+                    <img src="${s.image}" alt="${s.alt}" loading="lazy">
+                    <figcaption>${s.caption}</figcaption>
+                `;
+                listEl.appendChild(fig);
+            });
+
+            // --- Leaflet map ---
+            const map = L.map('map');
+            L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+                maxZoom: 19
+            }).addTo(map);
+
+            const latLngs = stops.map(s => [s.lat, s.lng]);
+            const markers = stops.map((s) => {
+                const marker = L.marker([s.lat, s.lng]).addTo(map);
+                marker.bindPopup(`
+                    <div class="tour-popup">
+                        <h4>${s.order}. ${s.title}</h4>
+                        <img src="${s.image}" alt="${s.alt}">
+                        <p>${s.caption}</p>
+                    </div>
+                `);
+                return marker;
+            });
+
+            L.polyline(latLngs, { color: '#5b7c8a', weight: 3, dashArray: '6 8' }).addTo(map);
+            map.fitBounds(L.latLngBounds(latLngs), { padding: [30, 30] });
+        }
+
+        initTour().catch((err) => console.error('Could not load tour stops:', err));
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,32 @@
+[
+  {
+    "id": "ferry-building",
+    "order": 1,
+    "title": "Ferry Building",
+    "lat": 37.7955,
+    "lng": -122.3937,
+    "image": "images/tour/01-ferry-building.jpg",
+    "alt": "Sample placeholder photo for the Ferry Building stop",
+    "caption": "SAMPLE STOP — replace with your own photo and notes. Starting point of the tour, at the edge of the Embarcadero."
+  },
+  {
+    "id": "coit-tower",
+    "order": 2,
+    "title": "Coit Tower",
+    "lat": 37.8024,
+    "lng": -122.4058,
+    "image": "images/tour/02-coit-tower.jpg",
+    "alt": "Sample placeholder photo for the Coit Tower stop",
+    "caption": "SAMPLE STOP — replace with your own photo and notes. Atop Telegraph Hill, with views across the bay."
+  },
+  {
+    "id": "lombard-street",
+    "order": 3,
+    "title": "Lombard Street",
+    "lat": 37.8021,
+    "lng": -122.4187,
+    "image": "images/tour/03-lombard-street.jpg",
+    "alt": "Sample placeholder photo for the Lombard Street stop",
+    "caption": "SAMPLE STOP — replace with your own photo and notes. The famous crooked block between Hyde and Leavenworth."
+  }
+]
