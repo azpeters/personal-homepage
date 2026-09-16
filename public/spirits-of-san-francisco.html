@@ -216,10 +216,6 @@
                     el.classList.toggle('is-hidden', el.id !== `place-${placeId}`);
                 });
                 filterNotice.classList.add('is-active');
-                const target = document.getElementById(`place-${placeId}`);
-                if (target) {
-                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }
             }
 
             function showAll() {
@@ -250,8 +246,9 @@
                 marker.on('click', () => showOnly(p.id));
             });
 
-            // Clicking empty map area (not a marker) clears the filter
-            map.on('click', () => showAll());
+            // Closing the popup (X button, clicking elsewhere, pressing Escape,
+            // or opening a different marker's popup) clears the filter
+            map.on('popupclose', () => showAll());
 
             map.fitBounds(L.latLngBounds(latLngs), { padding: [30, 30] });
         }
