@@ -1,0 +1,133 @@
+[
+  {
+    "id": "joice-st",
+    "order": 1,
+    "title": "Joice Street",
+    "chapter": "Chapter 1 - Joice Street. This was a delightful climb and descent walk. The scenery truly does rapidly change along it. Check out the book (see top) for more details.",
+    "lat": 37.793061,
+    "lng": -122.408527,
+    "images": [
+      {
+        "src": "images/spirits/ch1-joicest-1.jpeg",
+        "alt": "Start of the Joice Street steps. Same as drawing in book."
+      },
+      {
+        "src": "images/spirits/ch1-joicest-2.jpeg",
+        "alt": "Broader view of Joice Street steps."
+      },
+      {
+        "src": "images/spirits/ch1-joicest-3.jpeg",
+        "alt": "The Dragon Gate in San Francisco."
+      },
+      {
+        "src": "images/spirits/ch1-joicest-4.jpeg",
+        "alt": "Dashiell Hammett street name sign in San Francisco."
+      },
+      {
+        "src": "images/spirits/ch1-joicest-5.jpeg",
+        "alt": "The California St Cable Car in San Francisco."
+      }
+    ],
+    "caption": "Some photos I took on this journey up Joice St. The first close up of the Joice St steps mimics the perspective of the drawing in the book. The other photo of the Joice Street steps is just a zoom out further away view. Caught a nice pic of the Dragon Gate on my way to the Joice St steps from Muni. Couldn't resist capturing a pic of the Dashiell Hammett street sign; love a noir detective story. And of course, the California St cable car."
+  },
+  {
+    "id": "pier-24",
+    "order": 2,
+    "title": "Pier 24",
+    "chapter": "Chapter 2 - Pier 24. The only disappointing thing about this chapter is that the photography museum, Pier 24 Photography, that used to be housed here is no longer. It closed in July 2025. Still, great views of the bridge, the bay, and close enough to wander through the Ferry Building before or after, or both!",
+    "lat": 37.78976577028859,
+    "lng": -122.38796818738216,
+    "images": [
+      {
+        "src": "images/spirits/ch2-pier24-1.jpeg",
+        "alt": "View of San Francisco Bay Bridge, Pier 24 annex, and Pier 26 buildings."
+      },
+      {
+        "src": "images/spirits/ch2-pier24-2.jpeg",
+        "alt": "View through the holes in the gate of the San Francisco Pier 24 annex."
+      },
+      {
+        "src": "images/spirits/ch2-pier24-3.jpeg",
+        "alt": "View through the gate of the San Francisco Pier 24 annex."
+      },
+      {
+        "src": "images/spirits/ch2-pier24-4.jpeg",
+        "alt": "Underside of the San Francisco Bay Bridge taken from Pier 24."
+      }
+    ],
+    "caption": "Views of the San Francisco Bay bridge from around Pier 24 and Pier 26. It feels like a truly immense structure when you are under it; I definitely drive on it more than walk under it. Also, why are there palm trees along Embarcadero? How silly. The two pics through the gate are trying to replicate the drawing in the book (see top)."
+  },
+  {
+    "id": "division-st",
+    "order": 3,
+    "title": "Division Street",
+    "chapter": "Chapter 3 - Division Street. This was a more interesting chapter in the book than these pictures show. A walk down Division Street takes you from the fairly swanky design district to a more rundown, under the freeway overpass type of feel. Though, on this sunny day, it was a decent enough walk.",
+    "lat": 37.769481,
+    "lng": -122.406995,
+    "images": [
+      {
+        "src": "images/spirits/ch3-divisionst-2.jpeg",
+        "alt": "Picture taken from Portrero facing Division Street; shows water tower on top of building at 9th St and Brannan."
+      },
+      {
+        "src": "images/spirits/ch3-divisionst-3.jpeg",
+        "alt": "Picture taken from Portrero facing Division Street; shows water tower on top of building at 9th St and Brannan."
+      }
+    ],
+    "caption": "The two photos aim to replicate the drawing in the book (see top). The tree was a bit more leafed out or differently grown after 6 years. So I took a couple - one that really attempted to get the same angle, and one that attempted to get the water tower. Why is there a water tower on this building?"
+  },
+  {
+    "id": "tian-hou-temple",
+    "order": 4,
+    "title": "The Tian Hou Temple",
+    "chapter": "Chapter 4 - The Tian Hou Temple. Also entitled the Tin How Temple. Maybe it's because it's Chinatown, but this was the first chapter where I noticed how there were no people in the drawings. Unsure if it really was devoid of people when drawn (book was released in 2020) or if that was Paul Madonna's choice. But even on a late Monday morning there were many people roaming about San Francisco's Chinatown.",
+    "lat": 37.794292,
+    "lng": -122.406887,
+    "images": [
+      {
+        "src": "images/spirits/ch4-tianhoutemple-1.jpeg",
+        "alt": "Picture of coit tower from the balcony of the Tin How Temple."
+      },
+      {
+        "src": "images/spirits/ch4-tianhoutemple-2.jpeg",
+        "alt": "picture of the building containing the Tin How Temple."
+      },
+      {
+        "src": "images/spirits/ch4-tianhoutemple-3.jpeg",
+        "alt": "picture of a row of buildings containing the building containing the Tin How Temple"
+      },
+      {
+        "src": "images/spirits/ch4-tianhoutemple-4.jpeg",
+        "alt": "pic of one of the many SF Chinatown side streets"
+      }
+    ],
+    "caption": "The image containing San Francisco's Coit Tower is taken from the balcony of the Tian Hou (Tin How) Temple, one of the oldest still operating Taoist temples in the US. You are not allowed to take pictures inside, but I asked to take permission from the balcony to replicate the drawing in the book (see top). Two of the other shots are of the building containing the temple which is on the 4th floor. The other is a pic down one of the many side streets in Chinatown."
+  },
+  {
+    "id": "rock-house",
+    "order": 7,
+    "title": "The Rock House",
+    "chapter": "Chapter 7 - The Rock House. In addition to this chapter of Spirits fo San Francisco, another of Gary Kamiya's books Cool Gray City of Love (https://bookshop.org/a/128692/9781620401262) has some fantastic writing on the rocks and geology of San Francisco. Honestly, the only way to experience rocks is in person. I could have stared at these rocks for an hour, but I thought that might be weird given there are residences on top.",
+    "lat": 37.763283,
+    "lng": -122.406305,
+    "images": [
+      {
+        "src": "images/spirits/ch7-rockhouse-1.jpeg",
+        "alt": "Picture of the rock house, a house built on a rock at the corner of Mariposa and Utah in San Francisco"
+      },
+      {
+          "src": "images/spirits/ch7-rockhouse-2.jpeg",
+          "alt": "a close up of the rock at Mariposa and Utah"
+      },
+      {
+          "src": "images/spirits/ch7-rockhouse-3.jpeg",
+          "alt": "a close up of the rock at Mariposa and Utah"
+      },
+      {
+          "src": "images/spirits/ch7-rockhouse-4.jpeg",
+          "alt": "a lovely bench in a tree in a garden toward the 18th st overpass from Mariposa and Utah"
+      }
+    ],
+    "caption": "The main pic of the Rock House mimics the drawing in the book (see top). It was an unusually sunny day, so the rocks were barely visible in this shot, hence the other two close-ups of the rock. Walking from there to the 18th st overpass, I happened upon this lovely public garden bench."
+  }
+]

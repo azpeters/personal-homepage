@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Spirits of San Francisco: A Photo Companion | Alisa Peters</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description"
+        content="A personal photo companion to Gary Kamiya's Spirits of San Francisco, matching Alisa Peters' own photos to the places the book explores, mapped as she works through it.">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+    <link rel="icon" href="/images/favicon.ico" />
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+
+    <style>
+        #map {
+            height: 480px;
+            width: 100%;
+            margin: 20px 0;
+            border: 1px solid #ddd;
+        }
+
+        .tour-popup img {
+            width: 220px;
+            height: auto;
+            display: block;
+            margin-bottom: 6px;
+            border-radius: 2px;
+        }
+
+        .tour-popup h4 {
+            margin: 0 0 4px 0;
+        }
+
+        .tour-popup .popup-more {
+            font-size: 12px;
+            color: #777;
+        }
+
+        .book-callout {
+            background: #f7f5f0;
+            border: 1px solid #e5e0d5;
+            border-radius: 4px;
+            padding: 16px 20px;
+            margin: 20px 0 30px 0;
+        }
+
+        .book-callout p {
+            margin: 6px 0;
+        }
+
+        .place-entry {
+            margin-bottom: 40px;
+            padding-bottom: 30px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .place-entry .chapter-label {
+            color: #888;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+
+        .place-gallery {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: flex-start;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .place-gallery img {
+            max-width: 100%;
+            width: 320px;
+            height: auto;
+            border-radius: 2px;
+            flex: 1 1 280px;
+            cursor: zoom-in;
+        }
+
+        .lightbox-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.87);
+            z-index: 10000;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            cursor: zoom-out;
+        }
+
+        .lightbox-overlay.is-open {
+            display: flex;
+        }
+
+        .lightbox-overlay img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            box-shadow: 0 6px 40px rgba(0, 0, 0, 0.6);
+            cursor: default;
+        }
+
+        .lightbox-close {
+            position: fixed;
+            top: 14px;
+            right: 20px;
+            color: #fff;
+            font-size: 34px;
+            line-height: 1;
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 8px 12px;
+        }
+
+        .place-entry figcaption {
+            color: #555;
+            margin-top: 8px;
+        }
+
+        .place-entry.is-hidden {
+            display: none;
+        }
+
+        #filter-notice {
+            display: none;
+            margin: 16px 0;
+        }
+
+        #filter-notice.is-active {
+            display: block;
+        }
+
+        #filter-notice a {
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <p><a href="/">&larr; Back home</a></p>
+
+        <h1>Spirits of San Francisco: A Photo Companion</h1>
+        <p>
+            An ongoing project photographing the places, corners, and hidden histories from Gary Kamiya's and Paul Madonna's
+            <em>Spirits of San Francisco: Voyages Through the Unknown City</em> &mdash; matching my own photos to
+            the book's stories and drawings as I make my way through it, chapter by chapter. Click a marker on the map to see
+            photos for that place, or scroll down for the full list.
+        </p>
+
+        <div class="book-callout">
+            <p><strong>📖 The book:</strong> <em>Spirits of San Francisco: Voyages Through the Unknown City</em> by
+                Gary Kamiya and Paul Madonna is the companion to this page &mdash; every place here comes from something Kamiya
+                wrote about and Madonna illustrated.</p>
+            <p>
+                <a href="https://bookshop.org/a/128692/9781635579819"
+                    rel="noopener sponsored">Get it from Bookshop.org</a>
+                &mdash; when you check out, be sure pick your favorite local bookshop to support before you complete the
+                purchase.
+            </p>
+        </div>
+
+        <div id="map"></div>
+
+        <p id="filter-notice"><a id="show-all-link">&larr; Showing just this place. Click here to show all places.</a></p>
+
+        <section id="tour-stops" aria-label="Places from the book">
+            <!-- Populated from data/spirits-places.json below. -->
+        </section>
+    </div>
+
+    <div class="lightbox-overlay" id="lightbox">
+        <button class="lightbox-close" id="lightbox-close" aria-label="Close photo">&times;</button>
+        <img id="lightbox-img" src="" alt="">
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <script>
+        async function initTour() {
+            const res = await fetch('data/spirits-places.json');
+            const places = (await res.json()).sort((a, b) => a.order - b.order);
+
+            // A place's images can mark one as "primary" (images: [{ src, alt,
+            // primary: true }]) to force it first, regardless of listed order.
+            // Everything else keeps its original order after it.
+            function orderedImages(p) {
+                const imgs = p.images;
+                const i = imgs.findIndex((img) => img.primary);
+                if (i <= 0) return imgs;
+                return [imgs[i], ...imgs.slice(0, i), ...imgs.slice(i + 1)];
+            }
+
+            // --- Structured data for search engines / AI crawlers (static in the page source) ---
+            const jsonLd = {
+                "@context": "https://schema.org",
+                "@type": "ItemList",
+                "name": "Spirits of San Francisco: A Photo Companion",
+                "isBasedOn": {
+                    "@type": "Book",
+                    "name": "Spirits of San Francisco: Voyages Through the Unknown City",
+                    "author": { "@type": "Person", "name": "Gary Kamiya" }
+                },
+                "itemListElement": places.map((p, i) => ({
+                    "@type": "ListItem",
+                    "position": i + 1,
+                    "item": {
+                        "@type": "Place",
+                        "name": p.title,
+                        "description": p.caption,
+                        "image": orderedImages(p).map(img => new URL(img.src, window.location.href).href),
+                        "geo": {
+                            "@type": "GeoCoordinates",
+                            "latitude": p.lat,
+                            "longitude": p.lng
+                        }
+                    }
+                }))
+            };
+            const ldScript = document.createElement('script');
+            ldScript.type = 'application/ld+json';
+            ldScript.textContent = JSON.stringify(jsonLd);
+            document.head.appendChild(ldScript);
+
+            // --- Static, crawlable list (also serves as the no-JS-map fallback) ---
+            const listEl = document.getElementById('tour-stops');
+            places.forEach((p) => {
+                const fig = document.createElement('figure');
+                fig.className = 'place-entry';
+                fig.id = `place-${p.id}`;
+                const gallery = orderedImages(p).map(img =>
+                    `<img src="${img.src}" alt="${img.alt}" loading="lazy">`
+                ).join('');
+                fig.innerHTML = `
+                    <div class="chapter-label">${p.chapter || ''}</div>
+                    <h2>${p.title}</h2>
+                    <div class="place-gallery">${gallery}</div>
+                    <figcaption>${p.caption}</figcaption>
+                `;
+                listEl.appendChild(fig);
+            });
+
+            // --- Click a gallery photo to view it full size ---
+            const lightbox = document.getElementById('lightbox');
+            const lightboxImg = document.getElementById('lightbox-img');
+
+            function openLightbox(src, alt) {
+                lightboxImg.src = src;
+                lightboxImg.alt = alt;
+                lightbox.classList.add('is-open');
+            }
+
+            function closeLightbox() {
+                lightbox.classList.remove('is-open');
+                lightboxImg.src = '';
+            }
+
+            listEl.addEventListener('click', (e) => {
+                if (e.target.matches('.place-gallery img')) {
+                    openLightbox(e.target.src, e.target.alt);
+                }
+            });
+            document.getElementById('lightbox-close').addEventListener('click', closeLightbox);
+            lightbox.addEventListener('click', (e) => {
+                if (e.target === lightbox) closeLightbox();
+            });
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') closeLightbox();
+            });
+
+            // --- Leaflet map ---
+            // CARTO's free basemap tier now requires an API key (a 2026 policy
+            // change -- tiles show an "API KEY REQUIRED" watermark without one).
+            // This key is inherently visible to anyone viewing this page's
+            // source or network requests, since the browser needs it to fetch
+            // tiles directly -- that's expected for this kind of key, not a
+            // leak. For real protection, restrict it to alisapeters.com in the
+            // CARTO dashboard (dashboard.basemaps.carto.com) rather than
+            // relying on it staying secret.
+            const CARTO_API_KEY = 'cb1_3no6_1_1da20f533c49caece69e48dc';
+            const map = L.map('map');
+            L.tileLayer(`https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png?key=${CARTO_API_KEY}`, {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+                maxZoom: 19
+            }).addTo(map);
+
+            // --- Clicking a marker filters the list below to just that place ---
+            const filterNotice = document.getElementById('filter-notice');
+            const showAllLink = document.getElementById('show-all-link');
+
+            function showOnly(placeId) {
+                document.querySelectorAll('.place-entry').forEach((el) => {
+                    el.classList.toggle('is-hidden', el.id !== `place-${placeId}`);
+                });
+                filterNotice.classList.add('is-active');
+            }
+
+            function showAll() {
+                document.querySelectorAll('.place-entry').forEach((el) => el.classList.remove('is-hidden'));
+                filterNotice.classList.remove('is-active');
+            }
+
+            showAllLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                showAll();
+            });
+
+            const latLngs = places.map(p => [p.lat, p.lng]);
+            places.forEach((p) => {
+                const marker = L.marker([p.lat, p.lng]).addTo(map);
+                const firstImage = orderedImages(p)[0];
+                const moreNote = p.images.length > 1
+                    ? `<div class="popup-more">+${p.images.length - 1} more photo${p.images.length > 2 ? 's' : ''} below</div>`
+                    : '';
+                marker.bindPopup(`
+                    <div class="tour-popup">
+                        <h4>${p.title}</h4>
+                        <img src="${firstImage.src}" alt="${firstImage.alt}">
+                        ${moreNote}
+                        <p>${p.caption}</p>
+                    </div>
+                `);
+                marker.on('click', () => showOnly(p.id));
+            });
+
+            // Closing the popup (X button, clicking elsewhere, pressing Escape,
+            // or opening a different marker's popup) clears the filter
+            map.on('popupclose', () => showAll());
+
+            map.fitBounds(L.latLngBounds(latLngs), { padding: [30, 30] });
+        }
+
+        initTour().catch((err) => console.error('Could not load places:', err));
+    </script>
+</body>
+
+</html>
