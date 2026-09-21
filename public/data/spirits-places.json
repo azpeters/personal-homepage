@@ -34,7 +34,7 @@
     "id": "pier-24",
     "order": 2,
     "title": "Pier 24",
-    "chapter": "Chapter 2 - Pier 24. The most disappointing thing about this chapter is that the photography museum, Pier 24 Photography, that used to be housed here is no longer. It closed in July 2025. Still, great views of the bridge, the bay, and close enough to wander through the Ferry Building before or after, or both!",
+    "chapter": "Chapter 2 - Pier 24. The only disappointing thing about this chapter is that the photography museum, Pier 24 Photography, that used to be housed here is no longer. It closed in July 2025. Still, great views of the bridge, the bay, and close enough to wander through the Ferry Building before or after, or both!",
     "lat": 37.78976577028859,
     "lng": -122.38796818738216,
     "images": [
@@ -61,16 +61,16 @@
     "id": "division-st",
     "order": 3,
     "title": "Division Street",
-    "chapter": "Chapter 3 - Division Street. This was a more interesting chapter in the book than these pictures show. A walk Division Street takes you from the fairly swanky design district to a more rundown, under the freeway overpass type of feel. Though, on this sunny day, it was a decent enough walk.",
-    "lat": 37.76965175160381,
-    "lng": -122.40676510791599,
+    "chapter": "Chapter 3 - Division Street. This was a more interesting chapter in the book than these pictures show. A walk down Division Street takes you from the fairly swanky design district to a more rundown, under the freeway overpass type of feel. Though, on this sunny day, it was a decent enough walk.",
+    "lat": 37.769481,
+    "lng": -122.406995,
     "images": [
       {
-        "src": "images/spirits/ch3-divisionst-1.jpeg",
+        "src": "images/spirits/ch3-divisionst-2.jpeg",
         "alt": "Picture taken from Portrero facing Division Street; shows water tower on top of building at 9th St and Brannan."
       },
       {
-        "src": "images/spirits/ch3-divisionst-2.jpeg",
+        "src": "images/spirits/ch3-divisionst-3.jpeg",
         "alt": "Picture taken from Portrero facing Division Street; shows water tower on top of building at 9th St and Brannan."
       }
     ],
@@ -81,8 +81,8 @@
     "order": 4,
     "title": "The Tian Hou Temple",
     "chapter": "Chapter 4 - The Tian Hou Temple. Also entitled the Tin How Temple. Maybe it's because it's Chinatown, but this was the first chapter where I noticed how there were no people in the drawings. Unsure if it really was devoid of people when drawn (book was released in 2020) or if that was Paul Madonna's choice. But even on a late Monday morning there were many people roaming about San Francisco's Chinatown.",
-    "lat": 37.79490792908382,
-    "lng": -122.40649258990052,
+    "lat": 37.794292,
+    "lng": -122.406887,
     "images": [
       {
         "src": "images/spirits/ch4-tianhoutemple-1.jpeg",
@@ -108,8 +108,8 @@
     "order": 7,
     "title": "The Rock House",
     "chapter": "Chapter 7 - The Rock House. In addition to this chapter of Spirits fo San Francisco, another of Gary Kamiya's books Cool Gray City of Love (https://bookshop.org/a/128692/9781620401262) has some fantastic writing on the rocks and geology of San Francisco. Honestly, the only way to experience rocks is in person. I could have stared at these rocks for an hour, but I thought that might be weird given there are residences on top.",
-    "lat": 37.76370707221985,
-    "lng": -122.40649258979731,
+    "lat": 37.763283,
+    "lng": -122.406305,
     "images": [
       {
         "src": "images/spirits/ch7-rockhouse-1.jpeg",
