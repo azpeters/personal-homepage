@@ -75,8 +75,9 @@ go too, alongside your own photos for that place.
 
 ### The book link
 
-The Bookshop.org link in the page is not yet an affiliate link — when you
-set one up, swap the URL in `public/spirits-of-san-francisco.html` for your
-tracked affiliate link (and consider adding `rel="sponsored"` alongside
-`rel="noopener"` on that link, which search engines expect for paid/affiliate
-links).
+The Bookshop.org link in the page is your tracked affiliate link
+(`bookshop.org/a/128692/9781635579819`), marked with `rel="sponsored"`
+alongside `rel="noopener"`, which is what search engines expect on
+paid/affiliate links. If you ever need to change it (a new campaign, a
+different edition), update the `href` in
+`public/spirits-of-san-francisco.html` and keep both `rel` values.
